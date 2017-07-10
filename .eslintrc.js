@@ -197,6 +197,6 @@ module.exports = {
     // unary operators should not have a space.
     'space-unary-ops': 2,
     // require 2 space indentations; switch statements should also be indented
-    indent: ['error', 2, { 'SwitchCase': 1 }],
+    indent: ['error', 4, { 'SwitchCase': 1 }],
   },
 }

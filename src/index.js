@@ -1,101 +1,39 @@
-const moment = require('moment');
+const store = require('./state').store;
+const initialState = require('./config').initialState;
+const time = require('./time');
+const render = require('./render').render;
+const clockComponent = require('./clock');
 
-function getTimeRemaining(endTime) {
-    var t = Date.parse(endTime) - Date.parse(new Date());
-    var seconds = Math.floor((t / 1000) % 60);
-    var minutes = Math.floor((t / 1000 / 60) % 60);
-    return {
-        'total': t,
-        'minutes': minutes,
-        'seconds': seconds,
-    };
-}
+const clockStore = store(initialState);
 
-function initializeClock(clock) {
-    var clockEl = document.getElementById(clock.id);
-    var timeinterval = setInterval(() => {
-        clock = Object.assign(clock, getTimeRemaining(clock.endTime));
-        clockEl.innerHTML = 
-            `minutes: ${clock.minutes} <br>seconds: ${clock.seconds}`;
-        if (clock.total <= 0) {
-            clearInterval(timeinterval);
-        }
-    }, 1000);
-    return timeinterval;
-}
-
-function getEndTime(seconds) {
-    return moment().add(seconds, 'seconds');
-}
+//Do the initial render of the clocks
+Object.keys(clockStore.getState().clocks).map((id) => render(clockComponent, clockStore, {
+    id: id, 
+    time: {
+        startClock: time.startClock, 
+        stopClock: time.stopClock, 
+        setClock: time.setClock,
+        restartClock: time.restartClock,
+    },
+}));
 
 const clockApp = () => {
-    let clocks = {
-        clock1: {
-            id: 'clock1',
-            stop: true,
-            minutes: 0,
-            seconds: 0,
-        },
-        clock2: {
-            id: 'clock2',
-            stop: true,
-            minutes: 0,
-            seconds: 0,
-        },
-        clock3: {
-            id: 'clock3',
-            stop: true,
-            minutes: 0,
-            seconds: 0,
-        },
-        clock4: {
-            id: 'clock4',
-            stop: true,
-            minutes: 0,
-            seconds: 0,
-        },
-        clock5: {
-            id: 'clock5',
-            stop: true,
-            minutes: 0,
-            seconds: 0,
-        },
-        clock6: {
-            id: 'clock6',
-            stop: true,
-            minutes: 0,
-            seconds: 0,
-        },
-    };
-
     return {
-        stopClock: (id) => {
-            if(id) {
-                clearInterval(clocks[id]['timer']);
-            } else {
-                console.log('Please enter an id of a clock');
-            }
-            return this;
-        },
-        startClock: (id = '') => {
-            clocks[id]['endTime'] = getEndTime((clocks[id].minutes*60) + clocks[id].seconds);
-            if(id) {
-                clocks[id]['timer'] = initializeClock(clocks[id]);
-            } else {
-                console.log('Please enter the id of a clock');
-            }
-            return this;
-        },
-        setClock: (id, seconds) => {
-            if(id && seconds) {
-                clocks[id]['endTime'] = getEndTime(seconds);
-                clocks[id]['timer'] = initializeClock(clocks[id]);
-            } else {
-                console.log('Please enter a clock id and the time in seconds for the timer');
-            }
-            return this;
-        },
+        stopClock: (id) => time.stopClock(id, clockStore),
+        startClock: (id) => time.startClock(id, clockStore),
+        setClock: (id, seconds) => time.setClock(id, seconds, clockStore),
+        restartClock: (id) => time.restartClock(id, clockStore),
     };
 };
 
 window.clockApp = clockApp();
+
+console.log(`
+You can modify the clocks from the console using clockApp
+
+To update the clocks from the counter there are three available options, all of them require the id of the clock to be updated. The id values range from clock1 -> clock6: 
+1. setClock(id, seconds) - Sets and starts a clock with the specified amount of seconds
+2. startClock(id) - Starts a clock that is currently stopped
+3. stopClock(id) - Stops a clock that is currently started
+4. restartClock(id) - Restarts the clock
+`);

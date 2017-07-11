@@ -1,0 +1,51 @@
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color:mediumpurple;
+}
+
+#clock-container{
+    text-align: center;
+}
+
+.clock{
+    margin-bottom: 20px;
+}
+
+.clock:nth-child(1) {
+    margin-top: 20px;
+}
+
+.number{
+    border: solid 1px grey;
+    height: 100px;
+    width: 100px;
+    text-align: center;
+    font-size: 34px;
+    display: inline-block;
+    position: relative;
+    border-radius: 6px;
+    background-color:white;
+}
+
+.number.days{
+    background-color: black;
+    color: white;
+}
+
+.number.hours{
+    background-color: black;
+    color: white;
+}
+
+.number span{
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    font-weight: 700;
+    line-height: 1.2em;
+    text-rendering: optimizeLegibility;
+}

@@ -1,5 +1,5 @@
 
-# Doug Grogg Tout Project
+# Clock App
 
 This is my take on the timer project. The UI is straightforward, but account for all ac. The clocks can be controlled from the buttons alongside the clocks or via the console.
 
